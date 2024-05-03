@@ -21,6 +21,11 @@ def create_user(email="test@example.com", password="testpass123"):
     )
 
 
+def detail_url(tag_id):
+    """Create and return a recipe detail url"""
+    return reverse("recipe:tag-detail", args=[tag_id])
+
+
 class PublicTagAPITests(TestCase):
     """Test unauthenticated tag API requests"""
 
@@ -68,3 +73,24 @@ class PrivateTagAPITests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
+
+    def test_update_tag(self):
+        """Test updating a tag"""
+        tag = Tag.objects.create(user=self.user, name="testTag")
+
+        payload = {"name": "tag modificada"}
+
+        res = self.client.patch(detail_url(tag.id), payload)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        tag.refresh_from_db()
+        self.assertEqual(tag.name, payload["name"])
+
+    def test_delete_tag(self):
+        """Test deleting a tag"""
+        tag = Tag.objects.create(user=self.user, name="testTag")
+
+        res = self.client.delete(detail_url(tag.id))
+        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
+
+        self.assertFalse(Tag.objects.filter(user=self.user).exists())
