@@ -1,10 +1,16 @@
 """Views for the receipe api"""
 
-from rest_framework import viewsets, mixins
+from rest_framework import (
+    viewsets,
+    mixins,
+)
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from core.models import Recipe, Tag
+from core.models import (
+    Recipe,
+    Tag,
+)
 from recipe import serializers
 
 
@@ -39,7 +45,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 class TagViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     """View para as tags"""
 
-    serializer_class = serializers.Tag
+    serializer_class = serializers.TagSerializer
     queryset = Tag.objects.all()
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
