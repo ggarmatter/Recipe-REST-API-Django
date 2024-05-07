@@ -92,7 +92,7 @@ class ModelTests(TestCase):
 
         self.assertEqual(ingredient_name, ingredient.name)
 
-    @patch("core.models.uuid.uuid64")
+    @patch("core.models.uuid.uuid4")
     def test_recipe_file_name_uuid(self, mock_uuid):
         """Testgenerating image path"""
         uuid = "test-uuid"
