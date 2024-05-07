@@ -1,5 +1,6 @@
 """Test user model"""
 
+from unittest.mock import patch
 from decimal import Decimal
 
 from django.test import TestCase
@@ -90,3 +91,12 @@ class ModelTests(TestCase):
         )
 
         self.assertEqual(ingredient_name, ingredient.name)
+
+    @patch("core.models.uuid.uuid64")
+    def test_recipe_file_name_uuid(self, mock_uuid):
+        """Testgenerating image path"""
+        uuid = "test-uuid"
+        mock_uuid.return_value = uuid
+        file_path = models.recipe_image_file_path(None, "example.jpg")
+
+        self.assertEqual(file_path, f"uploads/recipe/{uuid}.jpg")
